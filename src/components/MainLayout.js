@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { AiOutlineBgColors, AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineUser } from 'react-icons/ai';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { SiBrandfolder } from 'react-icons/si';
 import { BiCategoryAlt } from 'react-icons/bi';
@@ -157,10 +157,10 @@ const MainLayout = () => {
           )}
           <div className='d-flex gap-4 align-items-center'>
             <div className='position-relative'>
-              <IoIosNotifications className='fs-4'/>
+              <IoIosNotifications className='fs-4' />
               <span className='badge bg-warning rounded-circle p-1 position-absolute'>3</span>
-              </div>
-            <div className='d-flex gap-3 align-items-center'>
+            </div>
+            <div className='d-flex gap-3 align-items-center dropdown'>
               <div>
                 <img
                   width={42}
@@ -168,9 +168,13 @@ const MainLayout = () => {
                   src='https://images.vexels.com/media/users/3/145908/raw/52eabf633ca6414e60a7677b0b917d92-male-avatar-maker.jpg'
                   alt='' />
               </div>
-              <div>
+              <div role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 <h5 className='mb-0'>Nguyễn Trúc An</h5>
                 <p className='mb-0'>nguyenan102az@gmail.com</p>
+              </div>
+              <div className='dropdown-menu' aria-labelledby='dropdownMenuLink'>
+                <li><Link className="dropdown-item py-1 mb-1" style={{ height: "auto", lineHeight: "20px" }} to="/">View Profile</Link></li>
+                <li><Link className="dropdown-item py-1 mb-1" style={{ height: "auto", lineHeight: "20px" }} to="/">Signout</Link></li>
               </div>
             </div>
           </div>
