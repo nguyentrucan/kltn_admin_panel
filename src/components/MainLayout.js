@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
 import { AiOutlineBgColors, AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineUser } from 'react-icons/ai';
 import { Link, Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +33,7 @@ const MainLayout = () => {
           mode="inline"
           defaultSelectedKeys={['']}
           onClick={({ key }) => {
-            if (key == 'signout') {
+            if (key === 'signout') {
 
             } else {
               navigate(key);
