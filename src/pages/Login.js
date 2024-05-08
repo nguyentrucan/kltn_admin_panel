@@ -25,10 +25,10 @@ const Login = () => {
     },
   });
   const authState = useSelector((state) => state)
-  const { user, isLoading, isError, isSuccess, message } = authState.auth;
+  const { user, isError, isSuccess, isLoading, message } = authState.auth;
   useEffect(() => {
     if (isSuccess) {
-      navigate('admin')
+      navigate("admin")
     }
     else {
       navigate("")
@@ -44,6 +44,9 @@ const Login = () => {
       <div className='my-5 w-25 bg-white rounded-3 mx-auto p-4'>
         <h3 className='text-center title'>Login</h3>
         <p className='text-center'>Login to your account to continue.</p>
+        <div className='error text-center'>
+          {message.message == "Rejected" ? "You are not an Admin" : ""}
+        </div>
         <form action='' onSubmit={formik.handleSubmit}>
           <div className='error'>
             {formik.touched.email && formik.errors.email ? (
