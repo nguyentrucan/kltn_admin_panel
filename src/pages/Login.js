@@ -7,8 +7,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../features/auth/authSlice'
 
 let schema = yup.object().shape({
-  email: yup.string().email("Email should be valid").required("Email is required"),
-  password: yup.string().required("Password is required"),
+  email: yup
+    .string()
+    .email("Email should be valid")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .required("Password is required"),
 })
 
 const Login = () => {
@@ -48,36 +53,41 @@ const Login = () => {
           {message.message == "Rejected" ? "You are not an Admin" : ""}
         </div>
         <form action='' onSubmit={formik.handleSubmit}>
-          <div className='error'>
-            {formik.touched.email && formik.errors.email ? (
-              <div>{formik.errors.email}</div>
-            ) : null}
-          </div>
           <CustomInput
             type='text'
             name='email'
-            label='Email Adress'
+            label='Email Address'
             id='email'
             val={formik.values.email}
-            onCh={formik.handleChange("email")} />
-          <div className='error'>
-            {formik.touched.password && formik.errors.password ? (
-              <div>{formik.errors.password}</div>
+            onCh={formik.handleChange("email")}
+            onBlr={formik.handleBlur("email")} />
+          <div className='error mt-2'>
+            {formik.touched.email && formik.errors.email ? (
+              <div>{formik.errors.email}</div>
             ) : null}
           </div>
           <CustomInput
             type='password'
             name='password'
             label='Password'
-            id='password'
+            id='pass'
             val={formik.values.password}
-            onCh={formik.handleChange("password")} />
+            onCh={formik.handleChange("password")}
+            onBlr={formik.handleBlur("password")} />
+          <div className='error mt-2'>
+            {formik.touched.password && formik.errors.password ? (
+              <div>{formik.errors.password}</div>
+            ) : null}
+          </div>
           <div className='mb-3 text-end'>
             <Link to='/forgot-password'>
               Forgot Password ?
             </Link>
           </div>
-          <button className='border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none fs-5' style={{ background: '#ffd333' }} type='submit'>Login</button>
+          <button
+            className='border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none fs-5'
+            style={{ background: '#ffd333' }}
+            type='submit'>Login</button>
         </form>
       </div>
     </div>
