@@ -47,7 +47,7 @@ const Orders = () => {
             product: orderState[i].products.map((i, j) => {
                 return <>
                     <ul key={j}>
-                        <li>{i.product.title}</li>
+                        <li>{i.product._id}</li>
                     </ul>
                 </>
             }),

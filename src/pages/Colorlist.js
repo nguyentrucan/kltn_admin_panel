@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { BiEdit } from "react-icons/bi"
 import { AiFillDelete } from "react-icons/ai"
 import { Link } from 'react-router-dom'
-import { getColors } from '../features/color/colorSlice';
+import { deleteColor, getColors } from '../features/color/colorSlice';
+import CustomModal from '../components/CustomModal';
 
 const columns = [
     {
@@ -23,6 +24,15 @@ const columns = [
 ];
 
 const Colorlist = () => {
+    const [open, setOpen] = useState(false)
+    const [colorId, setColorId] = useState("")
+    const showModal = (e) => {
+        setOpen(true)
+        setColorId(e)
+    }
+    const hideModal = () => {
+        setOpen(false)
+    }
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getColors())
@@ -35,10 +45,17 @@ const Colorlist = () => {
             title: colorState[i].title,
             action:
                 <>
-                    <Link className='fs-3 text-danger' to='/' ><BiEdit /></Link>
-                    <Link className='ms-3 fs-3 text-danger' to='/'><AiFillDelete /></Link>
+                    <Link className='fs-3 text-danger' to={`/admin/color/${colorState[i]._id}`} ><BiEdit /></Link>
+                    <button className='ms-3 fs-3 text-danger bg-transparent border-0' onClick={() => showModal(colorState[i]._id)}><AiFillDelete /></button>
                 </>,
         });
+    }
+    const deleteAColor = (e) => {
+        dispatch(deleteColor(e))
+        setOpen(false)
+        setTimeout(() => {
+            dispatch(getColors())
+        }, 100)
     }
     return (
         <div>
@@ -46,6 +63,13 @@ const Colorlist = () => {
             <div>
                 <Table columns={columns} dataSource={data1} />
             </div>
+            <CustomModal
+                hideModal={hideModal}
+                open={open}
+                performAction={() => {
+                    deleteAColor(colorId)
+                }}
+                title="Are you sure you want to delete this color ?" />
         </div>
     )
 }

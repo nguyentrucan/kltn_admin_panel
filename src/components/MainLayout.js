@@ -13,6 +13,7 @@ import { SiBrandfolder } from 'react-icons/si';
 import { BiCategoryAlt } from 'react-icons/bi';
 import { FaBloggerB, FaClipboardList } from 'react-icons/fa';
 import { ImBlog } from 'react-icons/im';
+import { RiCouponLine } from 'react-icons/ri';
 import { IoIosNotifications } from 'react-icons/io';
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
@@ -103,6 +104,23 @@ const MainLayout = () => {
               key: 'orders',
               icon: <FaClipboardList className='fs-4' />,
               label: 'Orders',
+            },
+            {
+              key: 'marketing',
+              icon: <RiCouponLine className='fs-4' />,
+              label: 'Marketing',
+              children: [
+                {
+                  key: 'coupon',
+                  icon: <ImBlog className='fs-4' />,
+                  label: 'Add Coupon',
+                },
+                {
+                  key: 'coupon-list',
+                  icon: <RiCouponLine className='fs-4' />,
+                  label: 'Coupon List',
+                },
+              ],
             },
             {
               key: 'blogs',
