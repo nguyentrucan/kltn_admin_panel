@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import CustomInput from '../components/CustomInput'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { createColor } from '../features/color/colorSlice';
 import ReactQuill from 'react-quill';
 import "react-quill/dist/quill.snow.css";
 import Dropzone from 'react-dropzone'
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice';
 import { getBCategories } from '../features/bcategory/bcategorySlice';
-import { createBlog, resetState } from '../features/blog/blogSlice';
+import { createBlog, getBlog, resetState, updateBlog } from '../features/blog/blogSlice';
 
 let schema = yup.object().shape({
     title: yup.string().required("Title is required"),
@@ -22,20 +21,36 @@ let schema = yup.object().shape({
 const Addblog = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const getBlogId = location.pathname.split("/")[3];
+
+    const imgState = useSelector((state) => state.upload.images);
+    const bcategoryState = useSelector((state) => state.bcategory.bcategories);
+    const blogState = useSelector((state) => state.blog);
+
+    const { isSuccess, isError, isLoading, createdBlog, blogName, blogDesc, blogCategory, blogImages, updatedBlog } = blogState;
 
     useEffect(() => {
-        dispatch(getBCategories())
+        if (getBlogId !== undefined) {
+            dispatch(getBlog(getBlogId))
+            img.push(blogImages)
+        } else {
+            dispatch(resetState())
+        }
+    }, [getBlogId])
+
+    useEffect(() => {
+        dispatch(resetState())
+        dispatch(getBCategories());
     }, [])
-
-    const bcategoryState = useSelector((state) => state.bcategory.bcategories);
-    const imgState = useSelector((state) => state.upload.images);
-    const newBlog = useSelector((state) => state.blog);
-
-    const { isSuccess, isError, isLoading, createdBlog } = newBlog;
 
     useEffect(() => {
         if (isSuccess && createdBlog) {
             toast.success("Blog Added Successfully !");
+        }
+        if (isSuccess && updatedBlog) {
+            toast.success("Blog Updated Successfullly!");
         }
         if (isError) {
             toast.error("Something went wrong !");
@@ -52,29 +67,39 @@ const Addblog = () => {
 
     useEffect(() => {
         formik.values.images = img;
-    }, [img])
+    }, [blogImages])
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
-            title: "",
-            description: "",
-            category: "",
+            title: blogName || "",
+            description: blogDesc || "",
+            category: blogCategory || "",
             images: "",
         },
         validationSchema: schema,
         onSubmit: (values) => {
             //alert(JSON.stringify(values));
-            dispatch(createBlog(values))
-            formik.resetForm();
-            setTimeout(() => {
-                dispatch(resetState())
-                navigate('/admin/blog-list');
-            }, 1000)
+            if (getBlogId !== undefined) {
+                const data = { id: getBlogId, blogData: values };
+                dispatch(updateBlog(data));
+                setTimeout(() => {
+                    dispatch(resetState())
+                    navigate('/admin/blog-list');
+                }, 1000)
+            } else {
+                dispatch(createBlog(values));
+                formik.resetForm();
+                setTimeout(() => {
+                    dispatch(resetState())
+                    navigate('/admin/blog-list');
+                }, 300)
+            }
         },
     });
     return (
         <div>
-            <h3 className='mb-4 title'>Add Blog</h3>
+            <h3 className='mb-4 title'>{getBlogId !== undefined ? "Edit" : "Add"} Blog</h3>
             <div className=''>
                 <form action='' onSubmit={formik.handleSubmit}>
                     {/* Title */}
@@ -143,7 +168,6 @@ const Addblog = () => {
                                         onClick={() => dispatch(deleteImg(i.public_id))}
                                         className='btn-close position-absolute'
                                         style={{ top: "10px", right: "10px" }}>
-
                                     </button>
                                     <img src={i.url} alt='' width={200} height={200} />
                                 </div>
@@ -152,7 +176,7 @@ const Addblog = () => {
                     </div>
 
                     {/* Submit */}
-                    <button className='btn btn-success border-0 rounded-3 my-5' type='submit'>Add Blog</button>
+                    <button className='btn btn-success border-0 rounded-3 my-5' type='submit'>{getBlogId !== undefined ? "Edit" : "Add"} Blog</button>
                 </form>
             </div>
         </div>
