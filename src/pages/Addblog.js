@@ -10,7 +10,7 @@ import "react-quill/dist/quill.snow.css";
 import Dropzone from 'react-dropzone'
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice';
 import { getBCategories } from '../features/bcategory/bcategorySlice';
-import { createBlog, getBlog, resetState, updateBlog } from '../features/blog/blogSlice';
+import { createBlog, getBlog, getBlogs, resetState, updateBlog } from '../features/blog/blogSlice';
 
 let schema = yup.object().shape({
     title: yup.string().required("Title is required"),
@@ -85,6 +85,7 @@ const Addblog = () => {
                 dispatch(updateBlog(data));
                 setTimeout(() => {
                     dispatch(resetState())
+                    getBlogs()
                     navigate('/admin/blog-list');
                 }, 1000)
             } else {
